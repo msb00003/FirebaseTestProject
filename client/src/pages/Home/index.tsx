@@ -1,16 +1,24 @@
 import React from 'react';
+import { Typography, Button } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import MenuAppBar from '../../components/MenuAppBar';
-import { Typography } from '@material-ui/core';
 
-const Home: React.FC = () => {
-  return (
-    <div>
-      <MenuAppBar />
-      <Typography variant="h3">
+const Home: React.FC = () => (
+  <div>
+    <MenuAppBar />
+    <Typography variant="h3">
         Logged in users have clicked: $x times
-      </Typography>
-    </div>
-  );
-}
+    </Typography>
+    <Button
+      type="submit"
+      variant="contained"
+      color="secondary"
+      component={Link}
+      to="/login"
+    >
+        Login
+    </Button>
+  </div>
+);
 
 export default Home;
