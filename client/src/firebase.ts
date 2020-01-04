@@ -148,6 +148,18 @@ class Database {
   // TODO: support removing listeners.
 }
 
+class Storage {
+  private storage: app.storage.Storage;
+  
+  constructor() {
+    this.storage = app.storage()
+  }
+
+  uploadFile() {
+    
+  } // so... yah.
+}
+
 const database = new Database();
 export { database };
 // TODO: migrate both to named import, 

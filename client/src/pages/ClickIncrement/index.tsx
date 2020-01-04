@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@material-ui/core';
+import { Button, TableContainer, Paper, Table, makeStyles, TableHead, TableRow, TableBody, TableCell } from '@material-ui/core';
 import MenuAppBar from '../../components/MenuAppBar';
 import { database } from '../../firebase';
+import StorageTable from '../../components/StorageTable';
 
+const useStyles = makeStyles({
+  table: {
+    minWidth: 650,
+  },
+});
 
 const ClickIncrement: React.FC = () => {
+  const classes = useStyles();
   /** 
    * So I need to fetch the value to render, then listen to it. 
    * iirc I can use hooks for that
@@ -14,12 +21,14 @@ const ClickIncrement: React.FC = () => {
    */
   const [count, setComponentCount] = useState(-1);
 
+
   useEffect(() => {
     // Add a listener with setCount as the callback
     database.fetchAndListenToCounter(setComponentCount);
   }, []);
 
 
+  
   return (
   <div>
     <MenuAppBar />
@@ -29,6 +38,14 @@ const ClickIncrement: React.FC = () => {
     <p>
         Gotta love a red button
     </p>
+    
+    <p>
+      Below is me playing with the firebase storage offering, on the left side you can preview and upload a file 
+      Image preview is really neat.
+      
+      The right side will let you see the file you have uploaded (if you have already)
+    </p>
+    <StorageTable />
   </div>
   )
 };
