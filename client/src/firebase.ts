@@ -24,17 +24,15 @@ const firebaseConfig = {
   measurementId: 'G-T9HY49EFG3',
 };
 
+app.initializeApp(firebaseConfig);
 console.warn('Initialized firebase');
 
+// TODO: split this into logical chunks, keeping as is for Auth for now.
 class Firebase {
   private auth: app.auth.Auth;
 
-  private db: app.firestore.Firestore;
-
   constructor() {
-    app.initializeApp(firebaseConfig);
     this.auth = app.auth();
-    this.db = app.firestore();
   }
 
   signInWithGoogle() {
@@ -45,7 +43,7 @@ class Firebase {
     this.auth.signInWithRedirect(provider);
   }
 
-  async getUserIfLoggedInFromRedirect(): Promise<app.User|null> {
+  async getUserIfLoggedInFromRedirect(): Promise<app.User | null> {
     // https://firebase.google.com/docs/auth/web/google-signin
     try {
       const result = await this.auth.getRedirectResult();
@@ -71,7 +69,7 @@ class Firebase {
     }
   }
 
-  getCurrentUser(): app.User|null {
+  getCurrentUser(): app.User | null {
     return this.auth.currentUser;
   }
 
@@ -82,4 +80,80 @@ class Firebase {
   // TODO: signout
 }
 
+const COUNTER_COLLECTION_ID = "counter_col"
+const COUNTER_DOCUMENT_ID = "counter_doc"
+
+interface CounterData {
+  count: number;
+}
+
+class Database {
+  private db: app.firestore.Firestore;
+
+  constructor() {
+    this.db = app.firestore();
+  }
+
+  // async writeSomething() {
+  //   // TODO: I fully expect this to fail for Auth reasons... it did not, firestore.rules is open...
+  //   this.db.collection("users").add({
+  //       first: "Ada",
+  //       last: "Lovelace",
+  //       born: 1815,
+  //   })
+  //   .then(function(docRef) {
+  //       console.log("Document written with ID: ", docRef.id);
+  //   })
+  //   .catch(function(error) {
+  //       console.error("Error adding document: ", error);
+  //   });
+  // }
+
+  // async readSomething() {
+  //   this.db.collection("users").get().then((querySnapshot) => {
+  //     querySnapshot.forEach((doc) => {
+  //         console.log(`${doc.id} => ${JSON.stringify(doc.data())}`);
+  //     });
+  //   });
+  // }
+
+  
+  fetchAndListenToCounter(callbackFunc: Function) {
+    const wrappedCallBackFunc = (data: CounterData) => {
+      callbackFunc(data.count)
+    }
+    this.listenForChange(COUNTER_COLLECTION_ID, COUNTER_DOCUMENT_ID, wrappedCallBackFunc);
+  }
+
+  async setCounter(newCounterValue: number) {
+    // TODO: does this need to be an increment? Components should have it.
+    const newData: CounterData = {
+      count: newCounterValue,
+    }
+
+    this.updateDocument(COUNTER_COLLECTION_ID, COUNTER_DOCUMENT_ID, newData)
+  }
+
+  private async updateDocument(collectionId: string, documentId: string, newData: Object): Promise<void> {
+    return this.db.collection(collectionId).doc(documentId).set(newData);
+  }
+
+  private listenForChange(collectionId: string, documentId: string, callbackFunc: Function) {
+    // Note: this will fetch immediately as well.
+    this.db.collection(collectionId).doc(documentId).onSnapshot(
+      (doc) => callbackFunc(doc.data())
+    );
+  }
+
+  // TODO: support removing listeners.
+}
+
+const database = new Database();
+export { database };
+// TODO: migrate both to named import, 
+//  may restructure the Firebase class to be Auth specific
+//  that would also make it easier to swap providers as there could be a decent interface
+//  especially so in Typescript if I were to write one.
 export default new Firebase();
+
+

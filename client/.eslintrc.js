@@ -6,6 +6,8 @@ module.exports = {
   extends: [
     'plugin:react/recommended',
     'airbnb',
+    'prettier/@typescript-eslint',
+    'plugin:prettier/recommended',
   ],
   globals: {
     Atomics: 'readonly',
