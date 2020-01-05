@@ -31,7 +31,7 @@ const ClickIncrement: React.FC = () => {
   
   return (
   <div>
-    <MenuAppBar />
+    <MenuAppBar pageName="Click Increment" />
     <Button variant="contained" color="secondary" onClick={() => { database.setCounter(count + 1) }}>
         Press to increment counter, current value: {count}
     </Button>
@@ -44,9 +44,7 @@ const ClickIncrement: React.FC = () => {
       Image preview is really neat.
     </p>
     <p>
-      The right side will let you see the file you have uploaded (if you have already). 
-      
-      It won't update after pressing upload as there's some faff I need to sort that isn't the point of the story
+      The right side will let you see the file you have uploaded (if you have already) or after you have uploaded one
     </p>
     <StorageTable />
   </div>

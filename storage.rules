@@ -1,8 +1,9 @@
 service firebase.storage {
   match /b/{bucket}/o {
-    match /image/user/{userId}/* { // so if I understand this you can only access your stuff.
+    match /images/user/{userId}/{allPaths=**} { // so if I understand this you can only access your stuff.
       allow read: if request.auth!=null;
       allow write: if request.auth!=null && request.resource.size < 10 * 1024 * 1024;
+      allow delete: if request.auth!=null;
     }
   }
 }

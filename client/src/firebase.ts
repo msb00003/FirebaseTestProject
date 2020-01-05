@@ -161,16 +161,18 @@ class Storage {
     const userImageRef = this.getUserImageStorageRef();
 
     if (userImageRef) {
-      this.uploadFileToRef(file, userImageRef);
+      await this.uploadFileToRef(file, userImageRef);
     }
   }
 
   private async uploadFileToRef(file: File, fileRef: app.storage.Reference) {
     await fileRef.put(file); // for the render I could pull the snapshot from here. Optimisation though
+    debugger;
     console.log('File uploaded to path:', fileRef);
   }
 
   async fetchUserImageUrl(): Promise<string | undefined> {
+    debugger;
     const userImageRef = this.getUserImageStorageRef();
 
     if (!userImageRef) {
@@ -192,7 +194,7 @@ class Storage {
       return;
     }
     const userId = user.uid;
-    const targetFilePath = `images/user/${userId}.jpeg`;
+    const targetFilePath = `images/user/${userId}/uploaded.jpeg`;
     const fileRef = this.storage.ref(targetFilePath);
     return fileRef;
   }
@@ -203,10 +205,25 @@ class Storage {
   }
 }
 
+class Functions {
+  private functions: app.functions.Functions;
+
+  constructor() {
+    this.functions = app.functions();
+  }
+
+  async callHelloWorldFunction(): Promise<string> {
+    const helloWorld = this.functions.httpsCallable('helloWorld');
+    const response = await helloWorld();
+    return response.data;
+  }
+}
+
 const database = new Database();
 const authentication = new Authentication();
 const storage = new Storage(authentication);
-export { database, storage };
+const functions = new Functions();
+export { database, storage, functions};
 // TODO: migrate both to named import, 
 //  may restructure the Firebase class to be Auth specific
 //  that would also make it easier to swap providers as there could be a decent interface

@@ -23,21 +23,24 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }));
 
-export default function MenuAppBar() {
+interface MenuAppBarProps extends React.Props<any> {
+  pageName: string,
+}
+
+export default function MenuAppBar({ pageName }: MenuAppBarProps) {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  console.error('user', firebase.getCurrentUser());
-  const isLoggedIn: Boolean = !!firebase.getCurrentUser();
+  // const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  // const open = Boolean(anchorEl);
+  
+  const isLoggedIn: Boolean = firebase.isLoggedIn();
 
+  // const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
 
   return (
     <div className={classes.root}>
@@ -49,11 +52,11 @@ export default function MenuAppBar() {
       </FormGroup> */}
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />
-          </IconButton>
+          </IconButton> */}
           <Typography variant="h6" className={classes.title}>
-            Photos
+            {pageName}
           </Typography>
           {isLoggedIn && (
             <div>
@@ -61,12 +64,12 @@ export default function MenuAppBar() {
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
-                onClick={handleMenu}
+                // onClick={handleMenu}
                 color="inherit"
               >
                 <AccountCircle />
               </IconButton>
-              <Menu
+              {/* <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
                 anchorOrigin={{
@@ -83,7 +86,7 @@ export default function MenuAppBar() {
               >
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
                 <MenuItem onClick={handleClose}>My account</MenuItem>
-              </Menu>
+              </Menu> */}
             </div>
           )}
         </Toolbar>

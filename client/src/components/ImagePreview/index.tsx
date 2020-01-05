@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from '@material-ui/core';
+import { Button, CircularProgress } from '@material-ui/core';
 
 const handleFileInputSelectedGetImageDataUrl = (file: File) => {
   return new Promise<string>((resolve) => {
@@ -28,6 +28,8 @@ interface ImagePreviewProps extends React.Props<any> {
 const ImagePreview = ({ uploadImage }: ImagePreviewProps) => {
   const [imageUrl, setImageUrl] = useState('');
   const [fileSelected, setFileSelected] = useState();
+  const [uploading, setUploading] = useState(false);
+
 
   return (
     <React.Fragment>
@@ -49,8 +51,14 @@ const ImagePreview = ({ uploadImage }: ImagePreviewProps) => {
           }
         }}
       />
-      {imageUrl && <div>
-        <Button variant="contained" color="primary" onClick={() => { uploadImage(fileSelected); }}>
+      {uploading &&
+        <div>
+          <Button variant="contained" color="primary" disabled >
+            Uploading <CircularProgress />
+        </Button>
+        </div>}
+      {!uploading && imageUrl && <div>
+        <Button variant="contained" color="primary" onClick={() => { setUploading(true); uploadImage(fileSelected).then(() => setUploading(false)) }}>
           Press to upload your image
           </Button>
       </div>}

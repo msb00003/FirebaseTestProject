@@ -216,6 +216,19 @@ Imma swap the img with a loading icon as that's a nicer UI anyway, which will co
 So. that has a collection of things that would be interesting to look into but aren't the point of the story
 I'll add a delete button and continue with life
 
+So functions have to return JSON to work with the sdk... that's neat.
+ Or at least I don't know how to tell it not to, oh well, I've updated the function to return JSON.
+
+ Apparently it has to be `{"data": ...}`
+
+Oh... nope that's a copy paste from the example. It expects response.data.text and typescript made that misleading
+Though typescript might forgive the '.text', it wants the JSON above
+
+Need to be very wary of those rules.
+I mean that is what the emulators are for and I imagine you can test that sort of thing
+
+... I was missing an await... Python would have told me! Sake need to be more careful of that
+
 TODO:
 - Really gotta fix the UI showing the login button between logging in and the redirect bouncing back
 - keep login state on refresh? login visibility seems a bit... off. Unless the login page is lagging

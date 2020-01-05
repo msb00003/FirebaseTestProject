@@ -5,7 +5,7 @@ import { storage } from '../../firebase';
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 650,
+    minWidth: 300,
   },
 });
 
@@ -43,7 +43,6 @@ const StorageTable: React.FC = () => {
       return;
     }
     setUploading(true);
-    console.error(uploading);
     try {
       await storage.uploadUserImage(fileSelected);
     } finally {
