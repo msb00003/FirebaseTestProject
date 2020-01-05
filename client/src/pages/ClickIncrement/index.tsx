@@ -42,8 +42,11 @@ const ClickIncrement: React.FC = () => {
     <p>
       Below is me playing with the firebase storage offering, on the left side you can preview and upload a file 
       Image preview is really neat.
+    </p>
+    <p>
+      The right side will let you see the file you have uploaded (if you have already). 
       
-      The right side will let you see the file you have uploaded (if you have already)
+      It won't update after pressing upload as there's some faff I need to sort that isn't the point of the story
     </p>
     <StorageTable />
   </div>

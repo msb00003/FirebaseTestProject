@@ -21,14 +21,18 @@ const handleFileInputSelectedGetImageDataUrl = (file: File) => {
   });
 }
 
-const ImagePreview = () => {
+interface ImagePreviewProps extends React.Props<any> {
+  uploadImage: Function,
+}
+
+const ImagePreview = ({ uploadImage }: ImagePreviewProps) => {
   const [imageUrl, setImageUrl] = useState('');
   const [fileSelected, setFileSelected] = useState();
 
   return (
     <React.Fragment>
       <p>
-        Below you can upload an arbitrary image file under 5 MB, mostly so I can have a play with storage.
+        Below you can upload an arbitrary image file under 10 MB, mostly so I can have a play with storage.
 
         Naturally do not upload anything sensitive, be it commercially, PII etc.
     </p>
@@ -46,7 +50,7 @@ const ImagePreview = () => {
         }}
       />
       {imageUrl && <div>
-        <Button variant="contained" color="primary" onClick={() => { console.error("hi"); }}>
+        <Button variant="contained" color="primary" onClick={() => { uploadImage(fileSelected); }}>
           Press to upload your image
           </Button>
       </div>}

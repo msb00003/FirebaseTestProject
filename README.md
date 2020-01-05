@@ -188,6 +188,34 @@ I did mean to call it, though I want those to be later in my code...
 Thankfully it's tolerant enough to just let me delete the return type,
  though I should learn what it wants from me
 
+Upload works, woot. Added storage rules that restrict upload size and access to that dir to the user.
+
+So, for displaying that. there's 2 points to check.
+1. When the image has finished uploading.
+2. On initial load.
+
+Now this would be a teeny bit simpler with Redux, though at the current scale... nah.
+ I'll maybe have a callback of something. Perhaps pass the upload function down from above.
+ Note: the above is a table... ah well it's fine.
+
+Typescript is being weird about an async useEffect... future problems
+
+TODO: ooooh what does the question mark do? I imagine wrap it in checks.
+```
+const userImageRef = this.getUserImageStorageRef();
+await userImageRef?.delete();
+```
+
+Regarding the src changing:
+// So that prop... isn't changing is it... neat. That's why it's not rerendering.
+
+// So I need something... that will. Like the filesize.
+Imma swap the img with a loading icon as that's a nicer UI anyway, which will conveniently... repull
+ and might get the cached data... le sigh
+
+So. that has a collection of things that would be interesting to look into but aren't the point of the story
+I'll add a delete button and continue with life
+
 TODO:
 - Really gotta fix the UI showing the login button between logging in and the redirect bouncing back
 - keep login state on refresh? login visibility seems a bit... off. Unless the login page is lagging

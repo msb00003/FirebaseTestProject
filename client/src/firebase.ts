@@ -28,7 +28,7 @@ app.initializeApp(firebaseConfig);
 console.warn('Initialized firebase');
 
 // TODO: split this into logical chunks, keeping as is for Auth for now.
-class Firebase {
+class Authentication {
   private auth: app.auth.Auth;
 
   constructor() {
@@ -150,22 +150,67 @@ class Database {
 
 class Storage {
   private storage: app.storage.Storage;
+  private authentication: Authentication;
   
-  constructor() {
+  constructor(authentication: Authentication) {
     this.storage = app.storage()
+    this.authentication = authentication;
   }
 
-  uploadFile() {
-    
-  } // so... yah.
+  async uploadUserImage(file: File): Promise<void> {
+    const userImageRef = this.getUserImageStorageRef();
+
+    if (userImageRef) {
+      this.uploadFileToRef(file, userImageRef);
+    }
+  }
+
+  private async uploadFileToRef(file: File, fileRef: app.storage.Reference) {
+    await fileRef.put(file); // for the render I could pull the snapshot from here. Optimisation though
+    console.log('File uploaded to path:', fileRef);
+  }
+
+  async fetchUserImageUrl(): Promise<string | undefined> {
+    const userImageRef = this.getUserImageStorageRef();
+
+    if (!userImageRef) {
+      return;
+    }
+    try {
+      const downloadUrl = await userImageRef.getDownloadURL()
+      return downloadUrl;
+    } catch {
+      console.info("User file does not exist")
+      return;
+    }
+  }
+
+  private getUserImageStorageRef(): app.storage.Reference | undefined {
+    const user = this.authentication.getCurrentUser();
+    if (!user) {
+      console.error("Storage::uploadFile User is not logged in, no-op");
+      return;
+    }
+    const userId = user.uid;
+    const targetFilePath = `images/user/${userId}.jpeg`;
+    const fileRef = this.storage.ref(targetFilePath);
+    return fileRef;
+  }
+
+  async deleteUserFile() {
+    const userImageRef = this.getUserImageStorageRef();
+    await userImageRef?.delete();
+  }
 }
 
 const database = new Database();
-export { database };
+const authentication = new Authentication();
+const storage = new Storage(authentication);
+export { database, storage };
 // TODO: migrate both to named import, 
 //  may restructure the Firebase class to be Auth specific
 //  that would also make it easier to swap providers as there could be a decent interface
 //  especially so in Typescript if I were to write one.
-export default new Firebase();
+export default authentication;
 
 
